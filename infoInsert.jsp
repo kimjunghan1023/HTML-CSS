@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-	
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="ko-KR">
 <head>
     <meta charset="utf-8"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/InsertPage.css" type="text/css">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/insertPage.js"></script>
+	
     <title>InfoInsert</title>
     <style>
 
@@ -21,15 +23,15 @@
 
    	<nav id="topMenu" >
 		<ul>
-			<li><a class="menuLink" href="">환자정보입력</a></li>
+			<li><a class="menuLink" href="infoInsert">환자정보입력</a></li>
 			<li>|</li>
-			<li><a class="menuLink" href="">환자조회</a></li>
+			<li><a class="menuLink" href="selectAll">환자조회</a></li>
 			<li>|</li>
 			<li><a class="menuLink" href="">백신</a></li>
 			<li>|</li>
-			<li><a class="menuLink" href="">국가통계모델</a></li>
+			<li><a class="menuLink" href="https://www.nhis.or.kr/nhis/index.do">국민건강보험</a></li>
 			<li>|</li>
-			<li><a class="menuLink" href="">홈</a></li>
+			<li><a class="menuLink" href="https://www.cdc.go.kr/index.es?sid=a2">질병관리본부</a></li>
 		</ul>
 	</nav>
   </header>
@@ -49,7 +51,7 @@
        <span class>
          <h1> 환자정보입력</h1>
          <br>
-		<form method="post" action="insertall">
+		<form method="post" action="insertall" onsubmit="return value_check()">
          <h2> 연령대</h2>
          <input type="radio" name="age" value="13세이하">
          13세이하
@@ -91,12 +93,12 @@
           <input type="radio" name="Vaccine" value="독+대+프">
           독+대+프
           <input type="radio" name="Vaccine" value="VIT-D">
-          VITD
+          VIT-D
           <input type="radio" name="Vaccine" value="독-Free">
-          독 FREE
+          독-Free
           <input type="radio" name="Vaccine" value="특별가">
           특별가<br>
-		<input type="submit"value="확인">
+		<input type="submit" value="확인">
 		</form>
           </span>
         </div>
@@ -119,8 +121,13 @@
                 <td>${member.memberAge }</td>
                 <td>${member.memberSex }</td>
                 <td>${member.memberVac }</td>
-                <td>${member.memberDate }</td>
-                <td class="modify"> <img class="modifyimage" src="button.jpg" alt="삭제버튼" ></td>
+                <fmt:parseDate value='${member.memberDate}' var='regDate' pattern="yyyy-MM-dd HH:mm:ss" />
+                <td><fmt:formatDate value="${regDate}" pattern="yyyy/MM/dd HH:mm"/></td>
+                <c:if test="${sessionScope.isAdmin == 'true'}">
+                <td class="modify"> 
+                <img onclick="delete_form(); location.href='delete?id=${member.memberId}';" class="modifyimage" src="${pageContext.request.contextPath}/resources/img/deleteButton.JPG" alt="삭제버튼">
+                </c:if>
+                </td>
               </tr>
              </c:forEach>
         </tbody>
